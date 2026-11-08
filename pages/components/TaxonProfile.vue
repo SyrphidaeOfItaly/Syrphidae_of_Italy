@@ -131,10 +131,8 @@
         >
           <h2 class="soi-serif text-2xl sm:text-3xl font-semibold">{{ s.title }}</h2>
 
-          <ul
-            v-if="s.key === 'species'"
-            class="soi-species mt-5 grid sm:grid-cols-2 gap-x-8"
-          >
+          <template v-if="s.key === 'species'">
+          <ul class="soi-species mt-5 grid sm:grid-cols-2 gap-x-8">
             <li
               v-for="sp in species"
               :key="sp.id"
@@ -151,6 +149,8 @@
               </component>
             </li>
           </ul>
+          <GenusHabitats :species="species" />
+          </template>
 
           <div
             v-else-if="s.key !== 'references'"
@@ -179,6 +179,7 @@
 import { computed } from 'vue'
 import PanelDistribution from '@/modules/otus/components/Panel/PanelMap/PanelMap.vue'
 import { useT } from '@/utils/soiLang.js'
+import GenusHabitats from './GenusHabitats.vue'
 
 const t = useT({
   en: {

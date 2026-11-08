@@ -230,6 +230,11 @@
               :otu-id="otuId"
               :items="traits.habitat"
             />
+            <HabitatRadar
+              v-if="traits.habitat.length"
+              :otu-id="otuId"
+              :items="traits.habitat"
+            />
 
             <!-- Flowers -->
             <FlowersVisited
@@ -350,6 +355,7 @@ import { TOPIC, traitsOf } from './traits.js'
 import RecordList from '../_shared/RecordList.vue'
 import FlowersVisited from './components/FlowersVisited.vue'
 import HabitatProfile from './components/HabitatProfile.vue'
+import HabitatRadar from './components/HabitatRadar.vue'
 import LarvalHabitat from './components/LarvalHabitat.vue'
 
 const props = defineProps({
