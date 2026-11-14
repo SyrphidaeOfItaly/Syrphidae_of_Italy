@@ -53,6 +53,7 @@ taxa_page:
             bind:
               mapOnly: true
   field_occurrences:
+    label: 'Field observations'
     rank_group: ['SpeciesGroup']
     panels:
       - - - panel:field-occurrences
