@@ -26,7 +26,9 @@ const loadOtu = ({ id, otu_valid_id }) => {
   router.push({
     name: 'otus-id-overview',
     params: {
-      id: otu_valid_id || id
+      // an invalid name opens its own page (which links to the valid name);
+      // an old combination already points at the valid species' page
+      id: id || otu_valid_id
     }
   })
 }

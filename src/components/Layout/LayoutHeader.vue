@@ -5,6 +5,7 @@
     <div
       class="container flex flex-wrap justify-between items-center mx-auto font-medium text-secondary-content"
     >
+      <div class="flex items-center text-primary-content">
       <RouterLink
         to="/"
         class="flex items-center text-primary-content"
@@ -19,6 +20,10 @@
           {{ header_logo_text || project_name }}
         </span>
       </RouterLink>
+      <ClientOnly>
+        <ReleaseBadge />
+      </ClientOnly>
+      </div>
 
       <NavbarMobile />
 
@@ -46,6 +51,7 @@
 <script setup>
 import SwitchTheme from '../SwitchTheme.vue'
 import LangSwitch from './LangSwitch.vue'
+import ReleaseBadge from './ReleaseBadge.vue'
 import NavbarMenu from '../Navbar/NavbarMenu.vue'
 import NavbarMobile from '../Navbar/NavbarMobile.vue'
 import { isValidUrl } from '@/utils/url'

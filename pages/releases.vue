@@ -178,15 +178,15 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useHead } from '@unhead/vue'
 import { makeAPIRequest } from '@/utils/request'
 import { useT, isIt } from '@/utils/soiLang.js'
+import { RELEASES_REPO, useReleases } from '@/utils/soiReleases.js'
 
-// where the releases live (the soi-releases repository on GitHub)
-const REPO = 'https://github.com/SyrphidaeOfItaly/soi-releases'
-const RELEASES_URL = 'https://raw.githubusercontent.com/SyrphidaeOfItaly/soi-releases/main/releases.json'
+// where the releases live: src/utils/soiReleases.js
+const REPO = RELEASES_REPO
 const COUNTS = ['species', 'genera', 'invalid_names', 'associations', 'references', 'occurrences']
 
 const t = useT({
@@ -265,8 +265,8 @@ const t = useT({
 })
 
 const router = useRouter()
-const releases = ref([])
-const state = ref('loading')
+const { releases, loaded } = useReleases()
+const state = computed(() => (loaded.value ? 'done' : 'loading'))
 
 const fmt = (n) => (n == null ? '—' : Number(n).toLocaleString(isIt.value ? 'it-IT' : 'en-US'))
 const fmtDate = (d) =>
@@ -296,24 +296,6 @@ async function openName(n) {
     // nothing to open
   }
 }
-
-onMounted(async () => {
-  try {
-    let data = null
-    if (import.meta.env.DEV) {
-      try {
-        data = JSON.parse(localStorage.getItem('soi-releases-test') || 'null')
-      } catch {
-        data = null
-      }
-    }
-    if (!data) data = await fetch(RELEASES_URL, { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : []))
-    releases.value = Array.isArray(data) ? data : []
-  } catch {
-    releases.value = []
-  }
-  state.value = 'done'
-})
 
 useHead({
   title: () => `${t('title')} — Syrphidae of Italy`,

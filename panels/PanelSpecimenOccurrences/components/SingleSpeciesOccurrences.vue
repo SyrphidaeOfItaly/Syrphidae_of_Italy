@@ -1,5 +1,37 @@
 <template>
   <div class="flex flex-col gap-3">
+    <!-- records filed under the valid name or one of its synonyms -->
+    <p
+      v-if="nameOptions.length > 1"
+      class="soi-occ-names"
+    >
+      <span class="soi-occ-label">{{ tt('filedUnder') }}</span>
+      <button
+        type="button"
+        :class="['soi-occ-name', { on: !filterOtuId }]"
+        :aria-pressed="!filterOtuId"
+        @click="filterOtuId = null"
+      >
+        {{ tt('all') }} <sup>{{ dwcRecords.length }}</sup>
+      </button>
+      <button
+        v-for="n in nameOptions"
+        :key="n.id"
+        type="button"
+        :class="['soi-occ-name', { on: filterOtuId === n.id }]"
+        :aria-pressed="filterOtuId === n.id"
+        @click="filterOtuId = filterOtuId === n.id ? null : n.id"
+      >
+        <span v-html="n.html" />
+        <span
+          v-if="!n.valid"
+          class="soi-occ-inv"
+          >{{ tt('invalid') }}</span
+        >
+        <sup>{{ dwcRecords.filter((r) => Number(r.otu_id) === n.id).length }}</sup>
+      </button>
+    </p>
+
     <ListRecords
       :list="listItems"
       :is-loading="isLoading"
@@ -61,6 +93,13 @@ import ImageLightbox from '../../_shared/ImageLightbox.vue'
 import { isSpecimenType, resolveSpecimenRef } from '../../_shared/specimenRef.js'
 import { groupRecords, groupCountLabel } from '../lib/groupRecords'
 import { HOME_COUNTRY } from '../config.js'
+import { otuNames } from '../../_shared/otuNames'
+import { useT } from '@/utils/soiLang.js'
+
+const tt = useT({
+  en: { filedUnder: 'Filed under', all: 'All', invalid: 'invalid' },
+  it: { filedUnder: 'Registrati come', all: 'Tutti', invalid: 'non valido' }
+})
 
 const UUID_RE = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i
 
@@ -186,6 +225,17 @@ const bioAssociationsIndex = ref(new Map())
 // Basic client-side filters — all data for this OTU is already fetched, so
 // filtering/re-grouping is instant with no extra API calls.
 const filterCountries = ref([])
+// records filed under one name only (the valid one or a synonym); null = all
+const filterOtuId = ref(null)
+const nameOptions = ref([])
+watch(
+  () => [...new Set(dwcRecords.value.map((r) => Number(r.otu_id)).filter(Boolean))].join(','),
+  async (ids) => {
+    const list = ids ? ids.split(',').map(Number) : []
+    nameOptions.value = list.length > 1 ? await otuNames(list) : []
+    if (!list.includes(filterOtuId.value)) filterOtuId.value = null
+  }
+)
 // Regions (stateProvince) of the site's home country — see ../config.js
 const filterRegions = ref([])
 const filterCollectors = ref([])
@@ -219,6 +269,7 @@ const availableCollectors = computed(() =>
 )
 
 function matchesBaseFilters(r) {
+  if (filterOtuId.value && Number(r.otu_id) !== filterOtuId.value) return false
   if (filterCountries.value.length && !filterCountries.value.includes(r.country)) return false
   if (filterRegions.value.length && !(r.country === HOME_COUNTRY && filterRegions.value.includes(r.stateProvince))) return false
   if (filterCollectors.value.length && !filterCollectors.value.includes(r.recordedBy)) return false
@@ -855,3 +906,51 @@ function showDetail(detail) {
   }
 }
 </script>
+
+<style scoped>
+.soi-occ-names {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 1rem;
+  margin: 0;
+}
+.soi-occ-label {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--soi-ink-soft);
+}
+.soi-occ-name {
+  padding: 0 0 0.1rem;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 0.88rem;
+  color: var(--soi-ink-soft);
+  cursor: pointer;
+}
+.soi-occ-name :deep(i) {
+  font-style: italic;
+}
+.soi-occ-name.on {
+  color: var(--soi-ink);
+  border-bottom-color: var(--soi-yellow);
+}
+.soi-occ-name sup {
+  margin-left: 0.15rem;
+  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-size: 0.65rem;
+}
+.soi-occ-inv {
+  margin-left: 0.3rem;
+  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--soi-terra);
+}
+</style>

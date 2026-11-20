@@ -59,3 +59,24 @@ PanelMapV2/
     makeSegmentedCircle.js
     isRankGroup.js
 ```
+
+## Syrphidae of Italy additions (2026-11)
+
+Copied from the World Ichneumonidae version and restyled for SoI (texts in English and Italian
+through `useT`).
+
+- **Faster maps**: a light summary map shows at once while the detailed map loads (TaxonWorks
+  takes ~10 s to build `distribution.geojson`). The detailed map is then kept in the browser
+  (`utils/mapCache.js`, IndexedDB `soi-map-cache`, one day) so the next visit is instant. If
+  `maps.endpoint` is set in `config/maps.yml`, ready-made maps are read from that Worker first
+  (`store/useDistributionStore.js`); empty = ask TaxonWorks.
+- **Base layers**: the layers button (bottom left) switches between the `map_tiles` of
+  `config/maps.yml` (Light, OpenStreetMap, GBIF, Terrain, Satellite); the choice is remembered
+  (`localStorage` key `soi-map-tile`, in `src/components/Map/VMap.client.vue`). Restart the dev
+  server after editing `config/maps.yml`.
+- **Name filter**: on a valid name's page, records can be shown for all names, the valid name or
+  one synonym (records "filed under" an invalid name).
+- **Legend**: click a type to hide or show it; the magnifier next to "Primary type" zooms to it.
+- **Full screen** button.
+- **Editor mode** (`?editor=1`, remembered; `?editor=0` to leave): lists records far from every
+  other record of the taxon, to check for errors.
