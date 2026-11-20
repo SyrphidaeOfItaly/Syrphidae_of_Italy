@@ -64,7 +64,8 @@ const MENU_IT = {
   'Help wanted': 'Cerchiamo aiuto',
   News: 'Notizie',
   About: 'Progetto',
-  'About SoI': 'Chi siamo'
+  'About SoI': 'Chi siamo',
+  Releases: 'Versioni'
 }
 
 export function menuLabel(label) {

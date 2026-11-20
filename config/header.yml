@@ -29,6 +29,8 @@
           link: /newtaxa
         - label: References added
           link: /newreferences
+        - label: Releases
+          link: /releases
 
     - label: News
       link: /news

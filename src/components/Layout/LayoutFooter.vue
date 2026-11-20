@@ -196,7 +196,8 @@ const explore = computed(() => [
   { to: '/atlas', label: menuLabel('Atlas') },
   { to: '/keys', label: menuLabel('Keys') },
   { to: '/bibliography', label: menuLabel('Bibliography') },
-  { to: '/data', label: menuLabel('Data') }
+  { to: '/data', label: menuLabel('Data') },
+  { to: '/releases', label: menuLabel('Releases') }
 ])
 
 const project = computed(() => [
