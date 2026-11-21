@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the version you used (each release has its own DOI on Zenodo)."
+title: "Syrphidae of Italy (SoI): website code"
+type: software
+authors:
+  - family-names: "Sommaggio"
+    given-names: "Daniele"
+  - family-names: "Dal Pos"
+    given-names: "Davide"
+    orcid: "https://orcid.org/0000-0002-9122-934X"
+    affiliation: "Enns Entomology Museum, University of Missouri"
+license: MIT
+url: "https://syrphidaeitaly.com"
+repository-code: "https://github.com/SyrphidaeOfItaly/Syrphidae_of_Italy"
+keywords:
+  - Syrphidae
+  - hoverflies
+  - Italy
+  - TaxonPages
+  - TaxonWorks
