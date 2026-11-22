@@ -1,12 +1,20 @@
 // Printing a key (Print / PDF button): the citation, the @page rules with running
 // footer and page numbers, and waiting for the figures. Pure helpers + two DOM ones.
 
-// "Sommaggio D, Dal Pos D (2026)." + key title → the citation printed with the key
-export function keyCitation({ authors = '', project = 'Syrphidae of Italy (SoI)', title = '', url = '', date = '' }) {
-  const who = String(authors).trim().replace(/\.$/, '')
-  const t = String(title).replace(/<[^>]+>/g, '').trim()
-  return `${who}. ${t ? `${t}. ` : ''}In: ${project}. ${url ? `Available at ${url}` : ''}${date ? ` (accessed ${date})` : ''}.`
-    .replace(/\s+\./g, '.').replace(/\.\./g, '.')
+// The citation printed with the key. Keys are meant to be USED; what we ask people to CITE is
+// the database (and, once published, the paper describing it — `project_paper` in config/project.yml).
+// The key itself is named only as "Key used", with its URL, so citations are not split per key.
+//   no paper:  "Sommaggio D, Dal Pos D (2026). Syrphidae of Italy (SoI). Available at https://syrphidaeitaly.com (accessed …). Key used: <title> (<url>)."
+//   paper set: "<paper> Database: Sommaggio D, Dal Pos D (2026). Syrphidae of Italy (SoI). Available at …. Key used: …"
+export function keyCitation({ authors = '', project = 'Syrphidae of Italy (SoI)', paper = '', site = '', title = '', url = '', date = '', lang = 'en' }) {
+  const clean = (x) => String(x || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim()
+  const who = clean(authors).replace(/\.$/, '')
+  const p = clean(paper)
+  const db = `${who}. ${clean(project)}.${site ? ` Available at ${site}` : ''}${date ? ` (accessed ${date})` : ''}.`
+  const t = clean(title)
+  const used = t || url ? ` ${lang === 'it' ? 'Chiave usata' : 'Key used'}: ${t}${url ? ` (${url})` : ''}.` : ''
+  const lead = p ? `${p.replace(/\.?$/, '.')} ${lang === 'it' ? 'Database' : 'Database'}: ` : ''
+  return `${lead}${db}${used}`.replace(/\s+\./g, '.').replace(/\.\.+/g, '.').replace(/\s{2,}/g, ' ')
 }
 
 // a CSS string literal for `content:` in a margin box

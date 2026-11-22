@@ -58,6 +58,6 @@ const props = defineProps({
 })
 
 const L = computed(() => (props.lang === 'it'
-  ? { scope: 'Ambito:', primary: 'Fonte principale:', authors: 'Autori:', version: 'Versione:', printed: 'Stampata il', cite: 'Come citare:', online: 'La chiave aggiornata online' }
-  : { scope: 'Scope:', primary: 'Primary source:', authors: 'Authors:', version: 'Version:', printed: 'Printed on', cite: 'How to cite:', online: 'The current key online' }))
+  ? { scope: 'Ambito:', primary: 'Fonte principale:', authors: 'Autori:', version: 'Versione:', printed: 'Stampata il', cite: 'Se usi questa chiave, cita:', online: 'La chiave aggiornata online' }
+  : { scope: 'Scope:', primary: 'Primary source:', authors: 'Authors:', version: 'Version:', printed: 'Printed on', cite: 'If you use this key, please cite:', online: 'The current key online' }))
 </script>

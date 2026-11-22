@@ -3,3 +3,6 @@
   project_citation: 'Syrphidae of Italy (SoI)'
   project_url: syrphidaeitaly.com
   project_authors: Sommaggio D, Dal Pos D (2026).
+  # Paper describing SoI: once published, put the full reference here (with DOI) and every printed
+  # key will ask to cite it first, then the database. Leave empty until then.
+  project_paper: ''
