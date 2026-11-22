@@ -163,15 +163,22 @@ const printUrl = computed(() => `${siteBase}/key/${route.params.id}?format=full`
 // Links in the PDF: taxon names and other site links → the public website (absolute, so they
 // work from the PDF); couplet numbers → the couplet inside the PDF. Returns a restore function.
 function linksForPdf(root) {
+  // Chrome drops a link from the PDF when it differs from the page address only after '#'
+  // (https://syrphidaeitaly.com/#/otus/1 vs the key at https://syrphidaeitaly.com/#/key/938):
+  // it takes it for a jump inside the page, finds no target and leaves no link. '?from=pdf'
+  // before the '#' makes it a real link to the website (the app ignores the query).
+  const external = (u) => u.replace(/^(https?:\/\/[^/#?]+)\/?#/, '$1/?from=pdf#')
   const changed = []
-  for (const a of root?.querySelectorAll('a[href]') || []) {
+  const anchors = [...(root?.querySelectorAll('a[href]') || []), ...document.querySelectorAll('.key-print-only a[href]')]
+  for (const a of anchors) {
     const h = a.getAttribute('href') || ''
     const path = h.replace(/^#/, '')
     const couplet = path.match(/^\/key\/[^/?]+\/(\d+)/)
     let to = null
     if (couplet) to = `#couplet-${couplet[1]}`
-    else if (path.startsWith('/')) to = siteBase + path
-    if (to) { changed.push([a, h]); a.setAttribute('href', to) }
+    else if (path.startsWith('/')) to = external(siteBase + path)
+    else if (h.startsWith(siteBase)) to = external(h)
+    if (to && to !== h) { changed.push([a, h]); a.setAttribute('href', to) }
   }
   return () => changed.forEach(([a, h]) => a.setAttribute('href', h))
 }
