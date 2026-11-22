@@ -5,6 +5,7 @@ type: software
 authors:
   - family-names: "Sommaggio"
     given-names: "Daniele"
+    orcid: "https://orcid.org/0000-0001-9999-3791"
   - family-names: "Dal Pos"
     given-names: "Davide"
     orcid: "https://orcid.org/0000-0002-9122-934X"

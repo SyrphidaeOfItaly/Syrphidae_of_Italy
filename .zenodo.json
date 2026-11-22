@@ -3,7 +3,10 @@
   "upload_type": "software",
   "description": "<p>Source code of the Syrphidae of Italy (SoI) website (https://syrphidaeitaly.com), the open catalogue of Italian hoverflies (Diptera: Syrphidae). The code contains the SoI-specific panels, pages and configuration built on TaxonPages, the open-source front end of TaxonWorks (Species File Group); the TaxonPages core is merged at build time and is not included here. The website reads the SoI project in TaxonWorks live through its public API.</p><p>Data releases: https://github.com/SyrphidaeOfItaly/soi-releases. Occurrence data on GBIF: doi:10.15468/faryxm.</p>",
   "creators": [
-    { "name": "Sommaggio, Daniele" },
+    {
+      "name": "Sommaggio, Daniele",
+      "orcid": "0000-0001-9999-3791"
+    },
     {
       "name": "Dal Pos, Davide",
       "affiliation": "Enns Entomology Museum, University of Missouri",
@@ -12,10 +15,32 @@
   ],
   "license": "MIT",
   "access_right": "open",
-  "keywords": ["Syrphidae", "Diptera", "hoverflies", "Italy", "TaxonPages", "TaxonWorks", "biodiversity informatics", "Vue"],
+  "keywords": [
+    "Syrphidae",
+    "Diptera",
+    "hoverflies",
+    "Italy",
+    "TaxonPages",
+    "TaxonWorks",
+    "biodiversity informatics",
+    "Vue"
+  ],
   "related_identifiers": [
-    { "identifier": "https://syrphidaeitaly.com", "relation": "isSupplementTo", "scheme": "url" },
-    { "identifier": "https://github.com/SpeciesFileGroup/taxonpages", "relation": "isDerivedFrom", "scheme": "url" },
-    { "identifier": "10.15468/faryxm", "relation": "isSupplementTo", "scheme": "doi", "resource_type": "dataset" }
+    {
+      "identifier": "https://syrphidaeitaly.com",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/SpeciesFileGroup/taxonpages",
+      "relation": "isDerivedFrom",
+      "scheme": "url"
+    },
+    {
+      "identifier": "10.15468/faryxm",
+      "relation": "isSupplementTo",
+      "scheme": "doi",
+      "resource_type": "dataset"
+    }
   ]
 }
