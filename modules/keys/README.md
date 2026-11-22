@@ -50,10 +50,14 @@ view is open, and the browser's "Save as PDF" turns it into a PDF:
 - **Only the key**: site header, footer, buttons, the row of badges under the title
   (couplets, taxa, updated, Taxonomy, Areas), the geography picker and the
   "+N more images" links are hidden; black on white; dimmed (out-of-area) leads print normally.
-- **Citation**: "How to cite: Sommaggio D, Dal Pos D (2026). <key title>. In: Syrphidae of
-  Italy (SoI). Available at https://syrphidaeitaly.com/#/key/<id>?format=full (accessed <date>)."
-  at the top and again at the end (`keyCitation` in `lib/printKey.js`, from `project_authors`,
-  `project_citation`, `project_url` in `config/project.yml`).
+- **Citation — cite the database, not the key**: keys are meant to be used; what we ask
+  people to cite is SoI. The printed line reads "If you use this key, please cite:
+  Sommaggio D, Dal Pos D (2026). Syrphidae of Italy (SoI). Available at https://syrphidaeitaly.com
+  (accessed <date>). Key used: <key title> (<key URL>)." When `project_paper` in
+  `config/project.yml` holds the reference of the paper describing SoI, it is printed first and
+  the database follows ("… Database: …"). Shown at the top and again at the end
+  (`keyCitation` in `lib/printKey.js`, from `project_authors`, `project_citation`, `project_url`,
+  `project_paper`).
 - **Running footer and page numbers** on every page: "<key title> · Syrphidae of Italy (SoI)"
   left, "Page n / N" right (`@page` margin boxes, injected at print time by `pageCss`).
   Chrome and Edge print them; Firefox and Safari print the key and the citation blocks but
@@ -67,6 +71,12 @@ view is open, and the browser's "Save as PDF" turns it into a PDF:
   to that couplet inside the PDF (`linksForPdf` in `KeyView.vue`, undone after printing).
   Chrome/Edge "Save as PDF" keeps both kinds of link.
 - After printing the page returns to the view it was in (Guided stays Guided).
+
+**Archived PDFs (`?pdf=1`)**: `/key/<id>?format=full&pdf=1` loads the key, switches to the print
+layout by itself and sets `<html data-key-print-ready="1">` instead of opening the print dialog.
+The soi-releases workflow (`scripts/keys-pdf.mjs`) opens every public key this way in headless
+Chrome and saves it as PDF into each data release (`keys/`), so a frozen copy of every key is kept
+under the release DOI.
 
 Files: `components/PrintKeyButton.vue` (button + menu, EN/IT), `lib/printKey.js`
 (+ `lib/printKey.test.js`: `node modules/keys/lib/printKey.test.js`), print rules at the end of

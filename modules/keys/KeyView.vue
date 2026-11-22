@@ -154,7 +154,7 @@ watch(format, (v) => { if (!printing.value) writeFormat(v) })
 
 // ---- Print / PDF: the full key, with the citation and running page numbers
 const printing = ref(false)
-const { project_authors, project_citation, project_url, hash_mode } = __APP_ENV__
+const { project_authors, project_citation, project_url, project_paper, hash_mode } = __APP_ENV__
 const printDate = ref(new Date().toISOString().slice(0, 10))
 // the public site, e.g. "https://syrphidaeitaly.com/#"
 const siteBase = `https://${(project_url || 'syrphidaeitaly.com').replace(/^https?:\/\//, '').replace(/\/$/, '')}${hash_mode ? '/#' : ''}`
@@ -175,9 +175,10 @@ function linksForPdf(root) {
   }
   return () => changed.forEach(([a, h]) => a.setAttribute('href', h))
 }
+// cite the database (and the paper, once `project_paper` is set) — the key is only "Key used"
 const printCitation = computed(() => keyCitation({
-  authors: project_authors, project: project_citation || 'Syrphidae of Italy (SoI)',
-  title: meta.value.title, url: printUrl.value, date: printDate.value
+  authors: project_authors, project: project_citation || 'Syrphidae of Italy (SoI)', paper: project_paper || '',
+  site: siteBase.replace(/\/#$/, ''), title: meta.value.title, url: printUrl.value, date: printDate.value, lang: soiLang.value
 }))
 // ---- extras: taxa reached, version, taxa not reached, feedback to the curators
 const taxaList = computed(() => taxaReached(nodes.value))
@@ -195,7 +196,7 @@ function feedbackFor(couplet) {
 }
 provide('keyFeedback', feedbackFor)
 
-const citeLabel = computed(() => (soiLang.value === 'it' ? 'Come citare:' : 'How to cite:'))
+const citeLabel = computed(() => (soiLang.value === 'it' ? 'Se usi questa chiave, cita:' : 'If you use this key, please cite:'))
 
 async function printKey({ figures = true } = {}) {
   if (printing.value) return
@@ -225,6 +226,9 @@ async function printKey({ figures = true } = {}) {
     printing.value = false
     window.removeEventListener('afterprint', done)
   }
+  // ?pdf=1 (release workflow, headless Chrome): stay in the print layout and signal it is ready;
+  // the workflow saves the page as PDF itself, so no print dialog is opened.
+  if (holdForPdf) { html.dataset.keyPrintReady = '1'; return }
   window.addEventListener('afterprint', done)
   window.print()
   // some browsers never fire afterprint; print() blocks until the dialog closes anyway
@@ -759,6 +763,13 @@ async function loadCompleteness(scopeOtuId, nodeMap, myGen) {
 }
 
 watch(() => route.params.id, (id) => id && load(id), { immediate: true })
+
+// ---- ?pdf=1: used by the soi-releases workflow to archive every key as PDF in each data release.
+// Once the key is loaded, prepare the print layout (full key, figures, citation) and wait.
+const holdForPdf = route.query.pdf === '1'
+watch(loading, (v) => {
+  if (!v && holdForPdf && !error.value) setTimeout(() => printKey({ figures: true }), 1500)
+})
 </script>
 
 <style>
