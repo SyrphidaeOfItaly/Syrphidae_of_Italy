@@ -10,7 +10,8 @@ export function keyCitation({ authors = '', project = 'Syrphidae of Italy (SoI)'
   const clean = (x) => String(x || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim()
   const who = clean(authors).replace(/\.$/, '')
   const p = clean(paper)
-  const db = `${who}. ${clean(project)}.${site ? ` Available at ${site}` : ''}${date ? ` (accessed ${date})` : ''}.`
+  const it = lang === 'it'
+  const db = `${who}. ${clean(project)}.${site ? ` ${it ? 'Disponibile su' : 'Available at'} ${site}` : ''}${date ? ` (${it ? 'consultato il' : 'accessed'} ${date})` : ''}.`
   const t = clean(title)
   const used = t || url ? ` ${lang === 'it' ? 'Chiave usata' : 'Key used'}: ${t}${url ? ` (${url})` : ''}.` : ''
   const lead = p ? `${p.replace(/\.?$/, '.')} ${lang === 'it' ? 'Database' : 'Database'}: ` : ''
